@@ -1,15 +1,28 @@
----
-title: "Lab6"
-author: "Toko Michioka"
-date: "2024-10-10"
-output: "github_document"
----
+Lab6
+================
+Toko Michioka
+2024-10-10
 
-#changes to only this file, not the original file will be reflected in the github website
+\#changes to only this file, not the original file will be reflected in
+the github website
 
-```{r}
+``` r
 library(haven)
 library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 library(ggplot2)
 
 data = read.csv("/Users/toko/Desktop/UofT/2024/Fall/PSY329/My project/Self-disclosure and Health Study 1_cleaned.csv")
@@ -54,37 +67,90 @@ composite_data <- new_data %>%
   mutate(RLS = rowMeans(cbind(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8)),
          IMS = rowMeans(cbind(Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5)),
          ESS = rowMeans(cbind(SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40)))
-  
-
 ```
 
-```{r}
+``` r
 #normality plots
 hist(composite_data$RLS)
-
-qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
-
-plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
-
-hist(composite_data$IMS)
-
-qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
-
-plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
-
-hist(composite_data$ESS)
-
-qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
-
-plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
-
 ```
 
-```{r}
+![](My-project_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+``` r
+qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+
+``` r
+plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-3.png)<!-- -->
+
+``` r
+hist(composite_data$IMS)
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-4.png)<!-- -->
+
+``` r
+qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-5.png)<!-- -->
+
+``` r
+plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-6.png)<!-- -->
+
+``` r
+hist(composite_data$ESS)
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-7.png)<!-- -->
+
+``` r
+qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-8.png)<!-- -->
+
+``` r
+plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-9.png)<!-- -->
+
+``` r
 #normality tests
 shapiro.test(composite_data$RLS)
-shapiro.test(composite_data$IMS)
-shapiro.test(composite_data$ESS)
-
 ```
 
+    ## 
+    ##  Shapiro-Wilk normality test
+    ## 
+    ## data:  composite_data$RLS
+    ## W = 0.92784, p-value = 8.946e-13
+
+``` r
+shapiro.test(composite_data$IMS)
+```
+
+    ## 
+    ##  Shapiro-Wilk normality test
+    ## 
+    ## data:  composite_data$IMS
+    ## W = 0.86411, p-value < 2.2e-16
+
+``` r
+shapiro.test(composite_data$ESS)
+```
+
+    ## 
+    ##  Shapiro-Wilk normality test
+    ## 
+    ## data:  composite_data$ESS
+    ## W = 0.95637, p-value = 5.689e-09
