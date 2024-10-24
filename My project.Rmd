@@ -11,6 +11,10 @@ output: "github_document"
 library(haven)
 library(dplyr)
 library(ggplot2)
+library(psych)
+library(performance)
+library(sjPlot)
+library(bruceR)
 
 data = read.csv("/Users/toko/Desktop/UofT/2024/Fall/PSY329/My project/Self-disclosure and Health Study 1_cleaned.csv")
 
@@ -47,44 +51,79 @@ combined_data <- data %>%
     R_Other == 1 ~ "Other"))
 
 new_data <- combined_data %>%
-  select(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8, Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5, Time_together, SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40, Gender, Sex, Partner_Gender, Race)
+  select(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8, Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5, Time_together, SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40, Gender, Sex, Partner_Gender, Race, Time_together)
 
-#make composites (Romantic Love Scale (SLC), Investment Model Scale (IMS), Emotional Self-Disclosure Scale (ESS))
+#make composites (Romantic Love Scale (RLS), Investment Model Scale (IMS), Emotional Self-Disclosure Scale (ESS))
 composite_data <- new_data %>%
   mutate(RLS = rowMeans(cbind(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8)),
          IMS = rowMeans(cbind(Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5)),
          ESS = rowMeans(cbind(SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40)))
   
+#removing n/a
+composite_clean_data <- na.omit(composite_data)
+
+```
+
+
+```{r}
+mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS )
+
+check_model(mo)
+
+model_summary(mo)
+
+plot_model(mo,  type ="est",  show.values = TRUE, vline.color = "#1B191999", line.size = 1.5, dot.size = 2.5, colors = "blue") + theme_bruce()
+```
+```{r}
+
+
+
+mo2<-lm(data = composite_clean_data, ESS ~ RLS + IMS + Race + Gender)
+
+model_summary(mo2)
+tab_model(mo2)
+
+plot_model(mo2,  type ="est",  show.values = TRUE, vline.color = "#1B191999", line.size = 1.5, dot.size = 2.5, colors = "blue") + theme_bruce()
 
 ```
 
 ```{r}
-#normality plots
-hist(composite_data$RLS)
-
-qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
-
-plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
-
-hist(composite_data$IMS)
-
-qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
-
-plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
-
-hist(composite_data$ESS)
-
-qqnorm(composite_data$RLS, col = "steelblue", lwd = 2)
-
-plot(density(composite_data$RLS, na.rm = TRUE, bw = 90),  lwd=2, main = "")
-
+PROCESS(composite_clean_data, y = "ESS", x = "RLS", mods = c("Gender"))
 ```
 
 ```{r}
-#normality tests
-shapiro.test(composite_data$RLS)
-shapiro.test(composite_data$IMS)
-shapiro.test(composite_data$ESS)
+PROCESS(composite_clean_data, y = "ESS", x = "RLS", mods = c("Partner_Gender"))
+```
+```{r}
+PROCESS(composite_clean_data, y = "ESS", x = "RLS", mods = c("Race"))
+```
+```{r}
+PROCESS(composite_clean_data, y = "ESS", x = "RLS", mods = c("Sex"))
+```
 
+```{r}
+ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
+  geom_point() + 
+  geom_smooth(method = lm) + 
+  facet_wrap(~ Sex) + 
+  theme_bruce()
+
+ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
+  geom_point() + 
+  geom_smooth(method = lm) + 
+  facet_wrap(~ Partner_Gender) + 
+  theme_bruce()
+
+ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
+  geom_point() + 
+  geom_smooth(method = lm) + 
+  facet_wrap(~ Gender) + 
+  theme_bruce()
+
+ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
+  geom_point() + 
+  geom_smooth(method = lm) + 
+  facet_wrap(~ Race) + 
+  theme_bruce()
 ```
 
