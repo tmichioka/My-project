@@ -76,6 +76,40 @@ library(bruceR)
     ## install.packages("bruceR", dep=TRUE)
 
 ``` r
+library(tidyverse)
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ forcats   1.0.0     ✔ readr     2.1.5
+    ## ✔ lubridate 1.9.3     ✔ tibble    3.2.1
+    ## ✔ purrr     1.0.2
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ psych::%+%()          masks ggplot2::%+%()
+    ## ✖ psych::alpha()        masks ggplot2::alpha()
+    ## ✖ data.table::between() masks dplyr::between()
+    ## ✖ Matrix::expand()      masks tidyr::expand()
+    ## ✖ dplyr::filter()       masks stats::filter()
+    ## ✖ data.table::first()   masks dplyr::first()
+    ## ✖ lubridate::hour()     masks data.table::hour()
+    ## ✖ lubridate::isoweek()  masks data.table::isoweek()
+    ## ✖ dplyr::lag()          masks stats::lag()
+    ## ✖ data.table::last()    masks dplyr::last()
+    ## ✖ lubridate::mday()     masks data.table::mday()
+    ## ✖ lubridate::minute()   masks data.table::minute()
+    ## ✖ lubridate::month()    masks data.table::month()
+    ## ✖ Matrix::pack()        masks tidyr::pack()
+    ## ✖ lubridate::quarter()  masks data.table::quarter()
+    ## ✖ lubridate::second()   masks data.table::second()
+    ## ✖ purrr::transpose()    masks data.table::transpose()
+    ## ✖ Matrix::unpack()      masks tidyr::unpack()
+    ## ✖ lubridate::wday()     masks data.table::wday()
+    ## ✖ lubridate::week()     masks data.table::week()
+    ## ✖ lubridate::yday()     masks data.table::yday()
+    ## ✖ lubridate::year()     masks data.table::year()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 data = read.csv("/Users/toko/Desktop/UofT/2024/Fall/PSY329/My project/Self-disclosure and Health Study 1_cleaned.csv")
 
 # Re-coding: Re-code gender identity, sex at birth, race/ethnicity, partner’s gender identity and combine them into one column
@@ -784,3 +818,360 @@ ggplot(composite_clean_data, aes(x = RLS, y = ESS)) +
     ## `geom_smooth()` using formula = 'y ~ x'
 
 ![](My-project_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+
+``` r
+#Cronbach's alpha for Romantic Love
+
+Alpha(new_data, "LOVE", 1:8)
+```
+
+    ## 
+    ## Reliability Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 8
+    ## Scale Range: 1 ~ 9
+    ## Total Cases: 393
+    ## Valid Cases: 390 (99.2%)
+    ## 
+    ## Scale Statistics:
+    ## Mean = 6.799
+    ## S.D. = 1.616
+    ## Cronbach’s α = 0.884
+    ## McDonald’s ω = 0.895
+    ## 
+    ## Item Statistics (Cronbach’s α If Item Deleted):
+    ## ────────────────────────────────────────────────
+    ##         Mean    S.D. Item-Rest Cor. Cronbach’s α
+    ## ────────────────────────────────────────────────
+    ## LOVE1  7.492 (1.753)          0.699        0.867
+    ## LOVE2  7.105 (2.112)          0.709        0.864
+    ## LOVE3  5.926 (2.184)          0.578        0.877
+    ## LOVE4  7.433 (1.954)          0.758        0.860
+    ## LOVE5  5.408 (2.553)          0.443        0.895
+    ## LOVE6  6.438 (2.609)          0.679        0.868
+    ## LOVE7  7.236 (2.115)          0.768        0.858
+    ## LOVE8  7.356 (1.976)          0.693        0.866
+    ## ────────────────────────────────────────────────
+    ## Item-Rest Cor. = Corrected Item-Total Correlation
+
+``` r
+#Cronbach's alpha for relationship satisfaction
+
+Alpha(new_data, "Satisfaction_global", 1:5)
+```
+
+    ## 
+    ## Reliability Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 5
+    ## Scale Range: 0 ~ 8
+    ## Total Cases: 393
+    ## Valid Cases: 389 (99.0%)
+    ## 
+    ## Scale Statistics:
+    ## Mean = 6.005
+    ## S.D. = 1.979
+    ## Cronbach’s α = 0.956
+    ## McDonald’s ω = 0.957
+    ## 
+    ## Item Statistics (Cronbach’s α If Item Deleted):
+    ## ───────────────────────────────────────────────────────────────
+    ##                        Mean    S.D. Item-Rest Cor. Cronbach’s α
+    ## ───────────────────────────────────────────────────────────────
+    ## Satisfaction_global1  6.175 (2.065)          0.907        0.941
+    ## Satisfaction_global2  5.686 (2.183)          0.819        0.955
+    ## Satisfaction_global3  5.679 (2.300)          0.890        0.944
+    ## Satisfaction_global4  6.337 (2.016)          0.915        0.940
+    ## Satisfaction_global5  6.149 (2.158)          0.863        0.948
+    ## ───────────────────────────────────────────────────────────────
+    ## Item-Rest Cor. = Corrected Item-Total Correlation
+
+``` r
+#Cronbach's alpha for Self disclosure
+
+Alpha(new_data, "SelfDisclosure", 1:40)
+```
+
+    ## 
+    ## Reliability Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 40
+    ## Scale Range: 1 ~ 5
+    ## Total Cases: 393
+    ## Valid Cases: 367 (93.4%)
+    ## 
+    ## Scale Statistics:
+    ## Mean = 3.823
+    ## S.D. = 0.863
+    ## Cronbach’s α = 0.978
+    ## McDonald’s ω = 0.978
+    ## 
+    ## Item Statistics (Cronbach’s α If Item Deleted):
+    ## ───────────────────────────────────────────────────────────
+    ##                    Mean    S.D. Item-Rest Cor. Cronbach’s α
+    ## ───────────────────────────────────────────────────────────
+    ## SelfDisclosure1   3.744 (1.221)          0.780        0.977
+    ## SelfDisclosure2   4.534 (0.815)          0.558        0.978
+    ## SelfDisclosure3   3.379 (1.314)          0.732        0.978
+    ## SelfDisclosure4   3.790 (1.167)          0.779        0.977
+    ## SelfDisclosure5   3.785 (1.210)          0.759        0.977
+    ## SelfDisclosure6   4.223 (1.061)          0.549        0.978
+    ## SelfDisclosure7   3.515 (1.297)          0.746        0.977
+    ## SelfDisclosure8   3.777 (1.232)          0.791        0.977
+    ## SelfDisclosure9   3.755 (1.235)          0.788        0.977
+    ## SelfDisclosure10  4.460 (0.854)          0.629        0.978
+    ## SelfDisclosure11  3.436 (1.270)          0.613        0.978
+    ## SelfDisclosure12  3.965 (1.097)          0.745        0.978
+    ## SelfDisclosure13  3.766 (1.199)          0.757        0.977
+    ## SelfDisclosure14  3.676 (1.287)          0.639        0.978
+    ## SelfDisclosure15  3.531 (1.282)          0.713        0.978
+    ## SelfDisclosure16  3.793 (1.235)          0.770        0.977
+    ## SelfDisclosure17  3.668 (1.241)          0.750        0.977
+    ## SelfDisclosure18  4.406 (0.903)          0.600        0.978
+    ## SelfDisclosure19  3.379 (1.302)          0.761        0.977
+    ## SelfDisclosure20  4.052 (1.111)          0.739        0.978
+    ## SelfDisclosure21  3.916 (1.119)          0.732        0.978
+    ## SelfDisclosure22  4.147 (1.084)          0.642        0.978
+    ## SelfDisclosure23  3.411 (1.323)          0.769        0.977
+    ## SelfDisclosure24  3.820 (1.246)          0.759        0.977
+    ## SelfDisclosure25  3.921 (1.139)          0.788        0.977
+    ## SelfDisclosure26  4.401 (0.926)          0.606        0.978
+    ## SelfDisclosure27  3.482 (1.232)          0.690        0.978
+    ## SelfDisclosure28  3.787 (1.133)          0.793        0.977
+    ## SelfDisclosure29  3.463 (1.311)          0.743        0.978
+    ## SelfDisclosure30  4.136 (1.110)          0.674        0.978
+    ## SelfDisclosure31  3.362 (1.325)          0.746        0.978
+    ## SelfDisclosure32  3.820 (1.250)          0.795        0.977
+    ## SelfDisclosure33  3.839 (1.149)          0.759        0.977
+    ## SelfDisclosure34  4.482 (0.809)          0.591        0.978
+    ## SelfDisclosure35  3.425 (1.234)          0.735        0.978
+    ## SelfDisclosure36  3.749 (1.146)          0.793        0.977
+    ## SelfDisclosure37  3.684 (1.245)          0.727        0.978
+    ## SelfDisclosure38  4.283 (1.025)          0.602        0.978
+    ## SelfDisclosure39  3.311 (1.350)          0.789        0.977
+    ## SelfDisclosure40  3.850 (1.167)          0.803        0.977
+    ## ───────────────────────────────────────────────────────────
+    ## Item-Rest Cor. = Corrected Item-Total Correlation
+
+``` r
+EFA(new_data, "LOVE", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
+```
+
+    ## 
+    ## Explanatory Factor Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 8
+    ## Scale Range: 1 ~ 9
+    ## Total Cases: 393
+    ## Valid Cases: 390 (99.2%)
+    ## 
+    ## Extraction Method:
+    ## - Principal Axis Factor Analysis
+    ## Rotation Method:
+    ## - (Only one component was extracted. The solution was not rotated.)
+    ## 
+    ## KMO and Bartlett's Test:
+    ## - Kaiser-Meyer-Olkin (KMO) Measure of Sampling Adequacy: MSA = 0.909
+    ## - Bartlett's Test of Sphericity: Approx. χ²(28) = 1578.12, p < 1e-99 ***
+    ## 
+    ## Total Variance Explained:
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ##           Eigenvalue Variance % Cumulative % SS Loading Variance % Cumulative %
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ## Factor 1       4.623     57.784       57.784      4.186     52.322       52.322
+    ## Factor 2       0.843     10.539       68.323                                   
+    ## Factor 3       0.652      8.149       76.472                                   
+    ## Factor 4       0.484      6.056       82.528                                   
+    ## Factor 5       0.447      5.584       88.112                                   
+    ## Factor 6       0.380      4.747       92.859                                   
+    ## Factor 7       0.327      4.091       96.950                                   
+    ## Factor 8       0.244      3.050      100.000                                   
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ## 
+    ## Factor Loadings (Sorted by Size):
+    ## ────────────────────────
+    ##          PA1 Communality
+    ## ────────────────────────
+    ## LOVE7  0.825       0.681
+    ## LOVE4  0.822       0.675
+    ## LOVE2  0.768       0.590
+    ## LOVE1  0.768       0.590
+    ## LOVE8  0.754       0.569
+    ## LOVE6  0.710       0.504
+    ## LOVE3  0.608       0.370
+    ## LOVE5  0.455       0.207
+    ## ────────────────────────
+    ## Communality = Sum of Squared (SS) Factor Loadings
+    ## (Uniqueness = 1 - Communality)
+
+![](My-project_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
+EFA(new_data, "Satisfaction_global", 1:5, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
+```
+
+    ## 
+    ## Explanatory Factor Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 5
+    ## Scale Range: 0 ~ 8
+    ## Total Cases: 393
+    ## Valid Cases: 389 (99.0%)
+    ## 
+    ## Extraction Method:
+    ## - Principal Axis Factor Analysis
+    ## Rotation Method:
+    ## - (Only one component was extracted. The solution was not rotated.)
+    ## 
+    ## KMO and Bartlett's Test:
+    ## - Kaiser-Meyer-Olkin (KMO) Measure of Sampling Adequacy: MSA = 0.883
+    ## - Bartlett's Test of Sphericity: Approx. χ²(10) = 2232.07, p < 1e-99 ***
+    ## 
+    ## Total Variance Explained:
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ##           Eigenvalue Variance % Cumulative % SS Loading Variance % Cumulative %
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ## Factor 1       4.266     85.330       85.330      4.089     81.779       81.779
+    ## Factor 2       0.325      6.499       91.829                                   
+    ## Factor 3       0.173      3.456       95.285                                   
+    ## Factor 4       0.151      3.030       98.315                                   
+    ## Factor 5       0.084      1.685      100.000                                   
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ## 
+    ## Factor Loadings (Sorted by Size):
+    ## ───────────────────────────────────────
+    ##                         PA1 Communality
+    ## ───────────────────────────────────────
+    ## Satisfaction_global4  0.945       0.893
+    ## Satisfaction_global1  0.936       0.876
+    ## Satisfaction_global3  0.912       0.833
+    ## Satisfaction_global5  0.888       0.789
+    ## Satisfaction_global2  0.836       0.698
+    ## ───────────────────────────────────────
+    ## Communality = Sum of Squared (SS) Factor Loadings
+    ## (Uniqueness = 1 - Communality)
+
+![](My-project_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+``` r
+EFA(new_data, "SelfDisclosure", 1:40, method = "pa", plot.scree = TRUE, nfactors = 1)
+```
+
+    ## 
+    ## Explanatory Factor Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 40
+    ## Scale Range: 1 ~ 5
+    ## Total Cases: 393
+    ## Valid Cases: 367 (93.4%)
+    ## 
+    ## Extraction Method:
+    ## - Principal Axis Factor Analysis
+    ## Rotation Method:
+    ## - (Only one component was extracted. The solution was not rotated.)
+    ## 
+    ## KMO and Bartlett's Test:
+    ## - Kaiser-Meyer-Olkin (KMO) Measure of Sampling Adequacy: MSA = 0.966
+    ## - Bartlett's Test of Sphericity: Approx. χ²(780) = 14640.26, p < 1e-99 ***
+    ## 
+    ## Total Variance Explained:
+    ## ────────────────────────────────────────────────────────────────────────────────
+    ##            Eigenvalue Variance % Cumulative % SS Loading Variance % Cumulative %
+    ## ────────────────────────────────────────────────────────────────────────────────
+    ## Factor 1       21.770     54.425       54.425     21.323     53.306       53.306
+    ## Factor 2        3.591      8.978       63.403                                   
+    ## Factor 3        1.719      4.298       67.701                                   
+    ## Factor 4        1.136      2.840       70.541                                   
+    ## Factor 5        0.887      2.217       72.758                                   
+    ## Factor 6        0.782      1.956       74.714                                   
+    ## Factor 7        0.689      1.723       76.437                                   
+    ## Factor 8        0.649      1.624       78.060                                   
+    ## Factor 9        0.592      1.479       79.540                                   
+    ## Factor 10       0.549      1.374       80.913                                   
+    ## Factor 11       0.501      1.253       82.167                                   
+    ## Factor 12       0.463      1.159       83.325                                   
+    ## Factor 13       0.437      1.093       84.418                                   
+    ## Factor 14       0.417      1.041       85.460                                   
+    ## Factor 15       0.399      0.998       86.458                                   
+    ## Factor 16       0.390      0.975       87.432                                   
+    ## Factor 17       0.362      0.904       88.337                                   
+    ## Factor 18       0.345      0.862       89.198                                   
+    ## Factor 19       0.326      0.815       90.013                                   
+    ## Factor 20       0.312      0.779       90.793                                   
+    ## Factor 21       0.294      0.735       91.528                                   
+    ## Factor 22       0.269      0.673       92.201                                   
+    ## Factor 23       0.260      0.649       92.850                                   
+    ## Factor 24       0.259      0.646       93.496                                   
+    ## Factor 25       0.244      0.609       94.106                                   
+    ## Factor 26       0.220      0.550       94.656                                   
+    ## Factor 27       0.213      0.533       95.189                                   
+    ## Factor 28       0.204      0.509       95.698                                   
+    ## Factor 29       0.189      0.473       96.171                                   
+    ## Factor 30       0.188      0.470       96.640                                   
+    ## Factor 31       0.178      0.445       97.085                                   
+    ## Factor 32       0.167      0.418       97.503                                   
+    ## Factor 33       0.160      0.401       97.904                                   
+    ## Factor 34       0.151      0.377       98.281                                   
+    ## Factor 35       0.146      0.365       98.646                                   
+    ## Factor 36       0.130      0.324       98.970                                   
+    ## Factor 37       0.118      0.294       99.264                                   
+    ## Factor 38       0.107      0.267       99.530                                   
+    ## Factor 39       0.099      0.249       99.779                                   
+    ## Factor 40       0.088      0.221      100.000                                   
+    ## ────────────────────────────────────────────────────────────────────────────────
+    ## 
+    ## Factor Loadings (Sorted by Size):
+    ## ───────────────────────────────────
+    ##                     PA1 Communality
+    ## ───────────────────────────────────
+    ## SelfDisclosure40  0.814       0.662
+    ## SelfDisclosure32  0.808       0.653
+    ## SelfDisclosure8   0.803       0.645
+    ## SelfDisclosure28  0.802       0.643
+    ## SelfDisclosure36  0.801       0.642
+    ## SelfDisclosure25  0.801       0.642
+    ## SelfDisclosure9   0.801       0.641
+    ## SelfDisclosure39  0.793       0.628
+    ## SelfDisclosure4   0.790       0.624
+    ## SelfDisclosure1   0.789       0.623
+    ## SelfDisclosure16  0.783       0.612
+    ## SelfDisclosure23  0.772       0.597
+    ## SelfDisclosure24  0.772       0.595
+    ## SelfDisclosure33  0.769       0.592
+    ## SelfDisclosure5   0.768       0.590
+    ## SelfDisclosure13  0.764       0.584
+    ## SelfDisclosure19  0.763       0.583
+    ## SelfDisclosure17  0.758       0.574
+    ## SelfDisclosure12  0.754       0.569
+    ## SelfDisclosure20  0.752       0.565
+    ## SelfDisclosure31  0.750       0.563
+    ## SelfDisclosure7   0.748       0.560
+    ## SelfDisclosure29  0.748       0.559
+    ## SelfDisclosure21  0.743       0.552
+    ## SelfDisclosure35  0.739       0.546
+    ## SelfDisclosure3   0.736       0.542
+    ## SelfDisclosure37  0.734       0.539
+    ## SelfDisclosure15  0.714       0.510
+    ## SelfDisclosure27  0.695       0.483
+    ## SelfDisclosure30  0.682       0.465
+    ## SelfDisclosure22  0.649       0.422
+    ## SelfDisclosure14  0.642       0.412
+    ## SelfDisclosure10  0.638       0.407
+    ## SelfDisclosure26  0.618       0.382
+    ## SelfDisclosure11  0.615       0.378
+    ## SelfDisclosure18  0.611       0.374
+    ## SelfDisclosure38  0.608       0.370
+    ## SelfDisclosure34  0.601       0.362
+    ## SelfDisclosure2   0.568       0.323
+    ## SelfDisclosure6   0.557       0.310
+    ## ───────────────────────────────────
+    ## Communality = Sum of Squared (SS) Factor Loadings
+    ## (Uniqueness = 1 - Communality)
+
+![](My-project_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->

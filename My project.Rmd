@@ -15,6 +15,7 @@ library(psych)
 library(performance)
 library(sjPlot)
 library(bruceR)
+library(tidyverse)
 
 data = read.csv("/Users/toko/Desktop/UofT/2024/Fall/PSY329/My project/Self-disclosure and Health Study 1_cleaned.csv")
 
@@ -126,4 +127,28 @@ ggplot(composite_clean_data, aes(x = RLS, y = ESS)) +
   facet_wrap(~ Race) + 
   theme_bruce()
 ```
+```{r}
+#Cronbach's alpha for Romantic Love
 
+Alpha(new_data, "LOVE", 1:8)
+```
+
+```{r}
+#Cronbach's alpha for relationship satisfaction
+
+Alpha(new_data, "Satisfaction_global", 1:5)
+```
+```{r}
+#Cronbach's alpha for Self disclosure
+
+Alpha(new_data, "SelfDisclosure", 1:40)
+```
+```{r}
+EFA(new_data, "LOVE", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
+```
+```{r}
+EFA(new_data, "Satisfaction_global", 1:5, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
+```
+```{r}
+EFA(new_data, "SelfDisclosure", 1:40, method = "pa", plot.scree = TRUE, nfactors = 1)
+```
