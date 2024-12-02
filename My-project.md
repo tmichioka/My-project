@@ -37,6 +37,11 @@ library(psych)
 ``` r
 library(performance)
 library(sjPlot)
+```
+
+    ## #refugeeswelcome
+
+``` r
 library(bruceR)
 ```
 
@@ -142,23 +147,30 @@ combined_data <- data %>%
     R_Asian == 1 ~ "Asian",
     R_Pacific == 1 ~ "Pacific",
     R_Arab == 1 ~ "Arab",
-    R_Other == 1 ~ "Other"))
+    R_Other == 1 ~ "Other")) %>%
+
+ mutate(
+    TRUST1_reverse = 8 - TRUST1,
+    TRUST2_reverse = 8 - TRUST2,
+    TRUST6_reverse = 8 - TRUST6,
+  )
 
 new_data <- combined_data %>%
-  select(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8, Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5, Time_together, SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40, Gender, Sex, Partner_Gender, Race, Time_together)
+  select(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8, Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5, Time_together, SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40, Gender, Sex, Partner_Gender, Race, Time_together, TRUST1_reverse, TRUST2_reverse, TRUST3, TRUST4, TRUST5, TRUST6_reverse, TRUST7, TRUST8)
 
-#make composites (Romantic Love Scale (RLS), Investment Model Scale (IMS), Emotional Self-Disclosure Scale (ESS))
+#make composites (Romantic Love Scale (RLS), Investment Model Scale (IMS), Emotional Self-Disclosure Scale (ESS)), 
 composite_data <- new_data %>%
   mutate(RLS = rowMeans(cbind(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8)),
          IMS = rowMeans(cbind(Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5)),
-         ESS = rowMeans(cbind(SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40)))
+         ESS = rowMeans(cbind(SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40)),
+         DTS = rowMeans(cbind(TRUST1_reverse, TRUST2_reverse, TRUST3, TRUST4, TRUST5, TRUST6_reverse, TRUST7, TRUST8)))
   
 #removing n/a
 composite_clean_data <- na.omit(composite_data)
 ```
 
 ``` r
-mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS )
+mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS + DTS)
 
 check_model(mo)
 ```
@@ -175,15 +187,17 @@ model_summary(mo)
     ## ────────────────────────
     ##              (1) ESS    
     ## ────────────────────────
-    ## (Intercept)    1.847 ***
-    ##               (0.164)   
+    ## (Intercept)    1.915 ***
+    ##               (0.366)   
     ## RLS            0.253 ***
-    ##               (0.032)   
+    ##               (0.033)   
     ## IMS            0.043    
     ##               (0.027)   
+    ## DTS           -0.017    
+    ##               (0.084)   
     ## ────────────────────────
     ## R^2            0.304    
-    ## Adj. R^2       0.300    
+    ## Adj. R^2       0.299    
     ## Num. obs.    355        
     ## ────────────────────────
     ## Note. * p < .05, ** p < .01, *** p < .001.
@@ -194,13 +208,77 @@ model_summary(mo)
     ## 
     ##  Term  VIF   VIF 95% CI Increased SE Tolerance Tolerance 95% CI
     ##   RLS 1.91 [1.66, 2.25]         1.38      0.52     [0.44, 0.60]
-    ##   IMS 1.91 [1.66, 2.25]         1.38      0.52     [0.44, 0.60]
+    ##   IMS 1.93 [1.68, 2.27]         1.39      0.52     [0.44, 0.60]
+    ##   DTS 1.02 [1.00, 3.52]         1.01      0.98     [0.28, 1.00]
+
+``` r
+plot_model(mo,  
+  type = "est",  
+  show.values = TRUE, 
+  vline.color = "#1B191999", 
+  line.size = 1.5, 
+  dot.size = 2.5, 
+  colors = "red",
+  axis.labels = c("Trust", "Relationship\nsatisfaction", "Romantic\nlove"),
+   ci.linewidth = 0.5) + 
+  theme_bruce() + 
+  labs(
+    title = "Self-disclosure"
+  ) + 
+  theme(
+    text = element_text(family = "Times New Roman")  # Set all text to Times New Roman
+  )
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+
+``` r
+mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS + DTS)
+
+check_model(mo)
+```
+
+![](My-project_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
+model_summary(mo)
+```
+
+    ## 
+    ## Model Summary
+    ## 
+    ## ────────────────────────
+    ##              (1) ESS    
+    ## ────────────────────────
+    ## (Intercept)    1.915 ***
+    ##               (0.366)   
+    ## RLS            0.253 ***
+    ##               (0.033)   
+    ## IMS            0.043    
+    ##               (0.027)   
+    ## DTS           -0.017    
+    ##               (0.084)   
+    ## ────────────────────────
+    ## R^2            0.304    
+    ## Adj. R^2       0.299    
+    ## Num. obs.    355        
+    ## ────────────────────────
+    ## Note. * p < .05, ** p < .01, *** p < .001.
+    ## 
+    ## # Check for Multicollinearity
+    ## 
+    ## Low Correlation
+    ## 
+    ##  Term  VIF   VIF 95% CI Increased SE Tolerance Tolerance 95% CI
+    ##   RLS 1.91 [1.66, 2.25]         1.38      0.52     [0.44, 0.60]
+    ##   IMS 1.93 [1.68, 2.27]         1.39      0.52     [0.44, 0.60]
+    ##   DTS 1.02 [1.00, 3.52]         1.01      0.98     [0.28, 1.00]
 
 ``` r
 plot_model(mo,  type ="est",  show.values = TRUE, vline.color = "#1B191999", line.size = 1.5, dot.size = 2.5, colors = "blue") + theme_bruce()
 ```
 
-![](My-project_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
 ``` r
 mo2<-lm(data = composite_clean_data, ESS ~ RLS + IMS + Race + Gender)
@@ -456,7 +534,7 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 plot_model(mo2,  type ="est",  show.values = TRUE, vline.color = "#1B191999", line.size = 1.5, dot.size = 2.5, colors = "blue") + theme_bruce()
 ```
 
-![](My-project_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 PROCESS(composite_clean_data, y = "ESS", x = "RLS", mods = c("Gender"))
@@ -781,19 +859,34 @@ ggplot(composite_clean_data, aes(x = RLS, y = ESS)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](My-project_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
+composite_clean_data <- composite_clean_data %>%
+  filter(Partner_Gender != "queergender")
+
 ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
   geom_point() + 
-  geom_smooth(method = lm) + 
-  facet_wrap(~ Partner_Gender) + 
-  theme_bruce()
+  geom_smooth(method = lm, color = "red") + 
+  facet_wrap(~ Partner_Gender, 
+             labeller = as_labeller(c("Female" = "Female partner", 
+                                      "Male" = "Male partner"))) + 
+  theme_bruce() + 
+  labs(
+    x = "Romantic love",  # Change x-axis label
+    y = "Self-disclosure"  # Change y-axis label
+  ) + 
+  theme(
+    text = element_text(family = "Times New Roman"),
+    axis.title = element_text(size = 14),  # Increase font size of axis titles
+    axis.text = element_text(size = 12),   # Increase font size of axis text
+    strip.text = element_text(size = 14) # Set all text to Times New Roman
+  )
 ```
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](My-project_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 ``` r
 ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
@@ -805,19 +898,33 @@ ggplot(composite_clean_data, aes(x = RLS, y = ESS)) +
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](My-project_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
 
 ``` r
+composite_clean_data <- composite_clean_data %>%
+  filter(Race != "Other")
+
 ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
   geom_point() + 
-  geom_smooth(method = lm) + 
-  facet_wrap(~ Race) + 
-  theme_bruce()
+  geom_smooth(method = lm, color = "red") +
+  facet_wrap(~ Race) +
+  theme_bruce() + 
+  labs(
+    x = "Romantic love",  # Change x-axis label
+    y = "Self-disclosure"  # Change y-axis label
+  ) + 
+  theme(
+    text = element_text(family = "Times New Roman"),
+     axis.title = element_text(size = 14),  # Increase font size of axis titles
+    axis.text = element_text(size = 12),   # Increase font size of axis text
+    strip.text = element_text(size = 14)   # Increase font size of facet labels
+  # Set all text to Times New Roman
+  )
 ```
 
     ## `geom_smooth()` using formula = 'y ~ x'
 
-![](My-project_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
 
 ``` r
 #Cronbach's alpha for Romantic Love
@@ -957,6 +1064,45 @@ Alpha(new_data, "SelfDisclosure", 1:40)
     ## Item-Rest Cor. = Corrected Item-Total Correlation
 
 ``` r
+#Cronbach's alpha for Trust
+
+Alpha(data, "TRUST", 1:8)
+```
+
+    ## 
+    ## Reliability Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 8
+    ## Scale Range: 1 ~ 7
+    ## Total Cases: 393
+    ## Valid Cases: 392 (99.7%)
+    ## 
+    ## Scale Statistics:
+    ## Mean = 4.970
+    ## S.D. = 1.089
+    ## Cronbach’s α = 0.805
+    ## McDonald’s ω = 0.884
+    ## 
+    ## Item TRUST8 correlates negatively with the scale and may be reversed.
+    ## You can specify this argument: rev=c("TRUST8")
+    ## 
+    ## Item Statistics (Cronbach’s α If Item Deleted):
+    ## ─────────────────────────────────────────────────
+    ##          Mean    S.D. Item-Rest Cor. Cronbach’s α
+    ## ─────────────────────────────────────────────────
+    ## TRUST1  4.862 (1.911)          0.654        0.760
+    ## TRUST2  5.411 (1.811)          0.775        0.739
+    ## TRUST3  5.390 (1.643)          0.750        0.747
+    ## TRUST4  5.635 (1.569)          0.771        0.746
+    ## TRUST5  5.599 (1.544)          0.739        0.751
+    ## TRUST6  5.018 (1.909)          0.702        0.751
+    ## TRUST7  5.668 (1.491)          0.739        0.753
+    ## TRUST8  2.179 (1.446)         -0.757        0.917
+    ## ─────────────────────────────────────────────────
+    ## Item-Rest Cor. = Corrected Item-Total Correlation
+
+``` r
 EFA(new_data, "LOVE", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
 ```
 
@@ -1008,7 +1154,7 @@ EFA(new_data, "LOVE", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("paral
     ## Communality = Sum of Squared (SS) Factor Loadings
     ## (Uniqueness = 1 - Communality)
 
-![](My-project_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ``` r
 EFA(new_data, "Satisfaction_global", 1:5, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
@@ -1056,7 +1202,61 @@ EFA(new_data, "Satisfaction_global", 1:5, method = "pa", plot.scree = TRUE, nfac
     ## Communality = Sum of Squared (SS) Factor Loadings
     ## (Uniqueness = 1 - Communality)
 
-![](My-project_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+EFA(data, "TRUST", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
+```
+
+    ## 
+    ## Explanatory Factor Analysis
+    ## 
+    ## Summary:
+    ## Total Items: 8
+    ## Scale Range: 1 ~ 7
+    ## Total Cases: 393
+    ## Valid Cases: 392 (99.7%)
+    ## 
+    ## Extraction Method:
+    ## - Principal Axis Factor Analysis
+    ## Rotation Method:
+    ## - (Only one component was extracted. The solution was not rotated.)
+    ## 
+    ## KMO and Bartlett's Test:
+    ## - Kaiser-Meyer-Olkin (KMO) Measure of Sampling Adequacy: MSA = 0.914
+    ## - Bartlett's Test of Sphericity: Approx. χ²(28) = 2429.47, p < 1e-99 ***
+    ## 
+    ## Total Variance Explained:
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ##           Eigenvalue Variance % Cumulative % SS Loading Variance % Cumulative %
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ## Factor 1       5.409     67.611       67.611      5.058     63.231       63.231
+    ## Factor 2       0.856     10.704       78.315                                   
+    ## Factor 3       0.486      6.071       84.386                                   
+    ## Factor 4       0.350      4.372       88.758                                   
+    ## Factor 5       0.269      3.359       92.117                                   
+    ## Factor 6       0.241      3.012       95.129                                   
+    ## Factor 7       0.223      2.790       97.919                                   
+    ## Factor 8       0.166      2.081      100.000                                   
+    ## ───────────────────────────────────────────────────────────────────────────────
+    ## 
+    ## Factor Loadings (Sorted by Size):
+    ## ──────────────────────────
+    ##            PA1 Communality
+    ## ──────────────────────────
+    ## TRUST4   0.879       0.773
+    ## TRUST7   0.850       0.722
+    ## TRUST5   0.839       0.703
+    ## TRUST3   0.835       0.697
+    ## TRUST8  -0.804       0.646
+    ## TRUST2   0.773       0.597
+    ## TRUST6   0.696       0.484
+    ## TRUST1   0.660       0.436
+    ## ──────────────────────────
+    ## Communality = Sum of Squared (SS) Factor Loadings
+    ## (Uniqueness = 1 - Communality)
+
+![](My-project_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
 EFA(new_data, "SelfDisclosure", 1:40, method = "pa", plot.scree = TRUE, nfactors = 1)
@@ -1174,4 +1374,4 @@ EFA(new_data, "SelfDisclosure", 1:40, method = "pa", plot.scree = TRUE, nfactors
     ## Communality = Sum of Squared (SS) Factor Loadings
     ## (Uniqueness = 1 - Communality)
 
-![](My-project_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](My-project_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->

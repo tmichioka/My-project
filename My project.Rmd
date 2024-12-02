@@ -49,16 +49,23 @@ combined_data <- data %>%
     R_Asian == 1 ~ "Asian",
     R_Pacific == 1 ~ "Pacific",
     R_Arab == 1 ~ "Arab",
-    R_Other == 1 ~ "Other"))
+    R_Other == 1 ~ "Other")) %>%
+
+ mutate(
+    TRUST1_reverse = 8 - TRUST1,
+    TRUST2_reverse = 8 - TRUST2,
+    TRUST6_reverse = 8 - TRUST6,
+  )
 
 new_data <- combined_data %>%
-  select(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8, Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5, Time_together, SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40, Gender, Sex, Partner_Gender, Race, Time_together)
+  select(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8, Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5, Time_together, SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40, Gender, Sex, Partner_Gender, Race, Time_together, TRUST1_reverse, TRUST2_reverse, TRUST3, TRUST4, TRUST5, TRUST6_reverse, TRUST7, TRUST8)
 
-#make composites (Romantic Love Scale (RLS), Investment Model Scale (IMS), Emotional Self-Disclosure Scale (ESS))
+#make composites (Romantic Love Scale (RLS), Investment Model Scale (IMS), Emotional Self-Disclosure Scale (ESS)), 
 composite_data <- new_data %>%
   mutate(RLS = rowMeans(cbind(LOVE1, LOVE2, LOVE3, LOVE4, LOVE5, LOVE6, LOVE7, LOVE8)),
          IMS = rowMeans(cbind(Satisfaction_global1, Satisfaction_global2, Satisfaction_global3, Satisfaction_global4, Satisfaction_global5)),
-         ESS = rowMeans(cbind(SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40)))
+         ESS = rowMeans(cbind(SelfDisclosure1, SelfDisclosure2, SelfDisclosure3, SelfDisclosure4, SelfDisclosure5, SelfDisclosure6, SelfDisclosure7, SelfDisclosure8, SelfDisclosure9, SelfDisclosure10, SelfDisclosure11, SelfDisclosure12, SelfDisclosure13, SelfDisclosure14, SelfDisclosure15, SelfDisclosure16, SelfDisclosure17, SelfDisclosure18, SelfDisclosure19, SelfDisclosure20, SelfDisclosure21, SelfDisclosure22, SelfDisclosure23, SelfDisclosure24, SelfDisclosure25, SelfDisclosure26, SelfDisclosure27, SelfDisclosure28, SelfDisclosure29, SelfDisclosure30, SelfDisclosure31, SelfDisclosure32, SelfDisclosure33, SelfDisclosure34, SelfDisclosure35, SelfDisclosure36, SelfDisclosure37, SelfDisclosure38, SelfDisclosure39, SelfDisclosure40)),
+         DTS = rowMeans(cbind(TRUST1_reverse, TRUST2_reverse, TRUST3, TRUST4, TRUST5, TRUST6_reverse, TRUST7, TRUST8)))
   
 #removing n/a
 composite_clean_data <- na.omit(composite_data)
@@ -67,7 +74,32 @@ composite_clean_data <- na.omit(composite_data)
 
 
 ```{r}
-mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS )
+mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS + DTS)
+
+check_model(mo)
+
+model_summary(mo)
+
+plot_model(mo,  
+  type = "est",  
+  show.values = TRUE, 
+  vline.color = "#1B191999", 
+  line.size = 1.5, 
+  dot.size = 2.5, 
+  colors = "red",
+  axis.labels = c("Trust", "Relationship\nsatisfaction", "Romantic\nlove"),
+   ci.linewidth = 0.5) + 
+  theme_bruce() + 
+  labs(
+    title = "Self-disclosure"
+  ) + 
+  theme(
+    text = element_text(family = "Times New Roman")  # Set all text to Times New Roman
+  )
+```
+
+```{r}
+mo<- lm(data = composite_clean_data, ESS ~ RLS + IMS + DTS)
 
 check_model(mo)
 
@@ -75,6 +107,7 @@ model_summary(mo)
 
 plot_model(mo,  type ="est",  show.values = TRUE, vline.color = "#1B191999", line.size = 1.5, dot.size = 2.5, colors = "blue") + theme_bruce()
 ```
+
 ```{r}
 
 
@@ -109,11 +142,26 @@ ggplot(composite_clean_data, aes(x = RLS, y = ESS)) +
   facet_wrap(~ Sex) + 
   theme_bruce()
 
+composite_clean_data <- composite_clean_data %>%
+  filter(Partner_Gender != "queergender")
+
 ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
   geom_point() + 
-  geom_smooth(method = lm) + 
-  facet_wrap(~ Partner_Gender) + 
-  theme_bruce()
+  geom_smooth(method = lm, color = "red") + 
+  facet_wrap(~ Partner_Gender, 
+             labeller = as_labeller(c("Female" = "Female partner", 
+                                      "Male" = "Male partner"))) + 
+  theme_bruce() + 
+  labs(
+    x = "Romantic love",  # Change x-axis label
+    y = "Self-disclosure"  # Change y-axis label
+  ) + 
+  theme(
+    text = element_text(family = "Times New Roman"),
+    axis.title = element_text(size = 14),  # Increase font size of axis titles
+    axis.text = element_text(size = 12),   # Increase font size of axis text
+    strip.text = element_text(size = 14) # Set all text to Times New Roman
+  )
 
 ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
   geom_point() + 
@@ -121,11 +169,26 @@ ggplot(composite_clean_data, aes(x = RLS, y = ESS)) +
   facet_wrap(~ Gender) + 
   theme_bruce()
 
+composite_clean_data <- composite_clean_data %>%
+  filter(Race != "Other")
+
 ggplot(composite_clean_data, aes(x = RLS, y = ESS)) + 
   geom_point() + 
-  geom_smooth(method = lm) + 
-  facet_wrap(~ Race) + 
-  theme_bruce()
+  geom_smooth(method = lm, color = "red") +
+  facet_wrap(~ Race) +
+  theme_bruce() + 
+  labs(
+    x = "Romantic love",  # Change x-axis label
+    y = "Self-disclosure"  # Change y-axis label
+  ) + 
+  theme(
+    text = element_text(family = "Times New Roman"),
+     axis.title = element_text(size = 14),  # Increase font size of axis titles
+    axis.text = element_text(size = 12),   # Increase font size of axis text
+    strip.text = element_text(size = 14)   # Increase font size of facet labels
+  # Set all text to Times New Roman
+  )
+
 ```
 ```{r}
 #Cronbach's alpha for Romantic Love
@@ -144,10 +207,19 @@ Alpha(new_data, "Satisfaction_global", 1:5)
 Alpha(new_data, "SelfDisclosure", 1:40)
 ```
 ```{r}
+#Cronbach's alpha for Trust
+
+Alpha(data, "TRUST", 1:8)
+```
+
+```{r}
 EFA(new_data, "LOVE", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
 ```
 ```{r}
 EFA(new_data, "Satisfaction_global", 1:5, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
+```
+```{r}
+EFA(data, "TRUST", 1:8, method = "pa", plot.scree = TRUE, nfactors = c("parallel"))
 ```
 ```{r}
 EFA(new_data, "SelfDisclosure", 1:40, method = "pa", plot.scree = TRUE, nfactors = 1)
